@@ -129,15 +129,19 @@ For iOS, open `iosApp/iosApp.xcodeproj` in Xcode and run on a simulator.
 
 This is the intended workflow. You describe the feature; Forge implements it.
 
+Use [`spec-template.md`](spec-template.md) as your starting point. A good spec
+includes a summary, acceptance criteria, a UI description, and explicit out-of-scope
+exclusions — the clearer the spec, the less back-and-forth in the repair loop.
+
 ```bash
 # Set your API key
 export ANTHROPIC_API_KEY=sk-ant-...
 
-# Check if your spec is clear enough
-forge spec check --spec "Add a todo list screen" --project .
+# Check if your spec is clear enough before running
+forge spec check --spec path/to/your-spec.md --project .
 
 # Start the feature run
-forge feature --spec "Add a todo list screen with add/delete/complete actions" --project .
+forge feature --spec path/to/your-spec.md --project .
 ```
 
 Forge will:
