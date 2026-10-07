@@ -289,10 +289,39 @@ Top bar: no shadow, background matches surface color
 
 ### Figma
 
-Forge cannot read Figma files directly. Copy your design tokens (colors,
-type scales, corner radii, spacing) into your spec or into a custom design skill
-at `.forge/skills/design.yaml`. A skill is the right place for design tokens
-that should apply to every run, not just one feature.
+Forge can read your Figma file directly via the Figma REST API. When configured,
+it fetches your color styles, text styles, and component names and injects them
+into every run — so the AI knows your exact tokens before writing UI code.
+
+**Setup:**
+
+1. Add to `.forge/project.yaml`:
+
+```yaml
+figma:
+  file_url: "https://www.figma.com/file/XXXXXXXXXXXXXXXXXXXXXXXX/MyApp"
+```
+
+2. Export your Figma API token and set it in the environment:
+
+```bash
+export FIGMA_API_KEY=figd_...
+```
+
+Forge reads the token from the environment — it is never stored in project files.
+
+**What Forge fetches:**
+- Color styles (solid fills → hex values)
+- Text styles (font family, size, weight, line height)
+- Component names (for naming Compose components consistently)
+
+If `FIGMA_API_KEY` is absent or the request fails, Forge continues normally.
+No run is ever blocked by a Figma fetch failure.
+
+**No Figma file?** Omit the `figma:` block entirely. You can still describe
+your design tokens in your spec or in a custom skill at
+`.forge/skills/design.yaml` — a skill is the right place for tokens that
+should apply to every run, not just one feature.
 
 ### Scaffolding a design system
 
