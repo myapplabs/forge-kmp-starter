@@ -456,13 +456,36 @@ of any AI judgment. The starter ships with two policy files:
 **`dependency.yaml`** — forbidden library enforcement (hard gate):
 - `DEP-001`: Blocks RxJava, Retrofit, OkHttp direct usage, and LiveData — libraries that conflict with the starter's chosen stack (Coroutines/Flow, Ktor, StateFlow)
 
-ANVIL also runs built-in security checks on every run regardless of policy files:
-hardcoded secrets, known-vulnerable CVEs, PII in logs, cleartext HTTP, and
-`verify.sh` tamper detection.
+**`conventions.yaml`** — your own pattern-based rules:
+- Add project-specific rules without writing code — each rule is a file glob + forbidden regex
+- Set `severity: hard_gate` to block, or `severity: advisory` to surface for review
+- Rule IDs must start with `CONV-`
 
-Add your own policies for project-specific invariants — for example:
-- All network calls must go through a specific interface
-- Certain internal packages must never import from each other
+```yaml
+# .forge/policies/conventions.yaml
+rules:
+  - id: "CONV-001"
+    description: "Do not call LegacyApiClient directly — use ApiRepository"
+    match_path: "**/*.kt"
+    forbid_pattern: "LegacyApiClient\\."
+    severity: hard_gate
+
+  - id: "CONV-002"
+    description: "No TODO or FIXME in production source"
+    match_path: "src/commonMain/**/*.kt"
+    forbid_pattern: "(?i)\\b(TODO|FIXME)\\b"
+    severity: advisory
+```
+
+ANVIL also runs built-in checks on every run regardless of policy files:
+
+| Rule | What it checks |
+|------|---------------|
+| `KMP-001` | Use case classes expose only `operator fun invoke()` |
+| `KMP-002` | No `MutableStateFlow` exposed publicly (must expose `StateFlow`) |
+| `KMP-003` | No `GlobalScope` — use structured concurrency |
+| `SEC-001–006` | Secrets, CVEs, PII in logs, cleartext HTTP, insecure hashes, `verify.sh` integrity |
+| `TEST-001` | No test files deleted during the run |
 
 ---
 

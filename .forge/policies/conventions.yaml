@@ -1,0 +1,38 @@
+# Convention policy — enforced by ANVIL on every Forge verification run.
+#
+# Each rule declares a file glob and a regex pattern that must NOT appear.
+# Any match produces a finding with the rule's ID and blocks or advises
+# depending on severity.
+#
+# Rule IDs must start with CONV- (built-in prefixes ARCH-, SEC-, DEP-,
+# KMP-, TEST- are reserved).
+#
+# severity: advisory   → shown in review output, does not block acceptance
+# severity: hard_gate  → blocks acceptance (use sparingly)
+#
+# Uncomment and adapt the examples below for your project.
+
+rules: []
+
+  # Example: no direct calls to a deprecated internal API
+  # - id: "CONV-001"
+  #   description: "Do not call LegacyApiClient directly — use ApiRepository"
+  #   match_path: "**/*.kt"
+  #   forbid_pattern: "LegacyApiClient\\."
+  #   severity: hard_gate
+
+  # Example: all coroutines must use structured scopes (no GlobalScope)
+  # Already enforced by built-in KMP-003, but shown here as an example
+  # of how you would write a project-specific version:
+  # - id: "CONV-002"
+  #   description: "Use structured coroutine scopes — no GlobalScope"
+  #   match_path: "**/*.kt"
+  #   forbid_pattern: "\\bGlobalScope\\b"
+  #   severity: advisory
+
+  # Example: no TODO/FIXME comments in production source
+  # - id: "CONV-003"
+  #   description: "No TODO or FIXME comments in production code"
+  #   match_path: "src/commonMain/**/*.kt"
+  #   forbid_pattern: "(?i)\\b(TODO|FIXME)\\b"
+  #   severity: advisory
