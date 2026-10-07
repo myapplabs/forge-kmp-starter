@@ -241,6 +241,62 @@ Root package: `com.forge.starter`
 
 ---
 
+## Design system
+
+The starter ships with a minimal Material3 theme (`shared/ui/.../theme/Theme.kt`)
+— default colors, no custom typography, no branded components. **Forge will use
+these defaults unless you tell it otherwise.**
+
+### Bringing your own design
+
+Describe your design in your spec and Forge will implement it. The more specific
+you are, the closer the result will be to your Figma:
+
+```
+Design tokens:
+- Primary: #6750A4
+- On-primary: #FFFFFF
+- Background: #FFFBFE
+- Surface: #FFFBFE
+- Error: #B3261E
+
+Typography:
+- Display: Roboto 57sp, weight 400
+- Headline: Roboto 32sp, weight 400
+- Body: Roboto 16sp, weight 400
+- Label: Roboto 11sp, weight 500
+```
+
+You can also describe component styles directly:
+
+```
+Primary button: filled, rounded corners (50% radius), 48dp height, no elevation
+Card: 12dp corner radius, 1dp stroke using outline color, no elevation
+Top bar: no shadow, background matches surface color
+```
+
+### Figma
+
+Forge cannot read Figma files directly. Copy your design tokens (colors,
+type scales, corner radii, spacing) into your spec or into a custom design skill
+at `.forge/skills/design.yaml`. A skill is the right place for design tokens
+that should apply to every run, not just one feature.
+
+### Scaffolding a design system
+
+To generate a design system foundation with component stubs:
+
+```bash
+forge design scaffold --package com.myapp --module :shared:ui --project .
+```
+
+This creates `DesignTokens.kt`, `AppButton.kt`, `AppTextField.kt`,
+`AppCard.kt`, `AppTopBar.kt`, and other shared components in `:shared:ui`.
+Fill in your token values, then reference the scaffold in your spec so Forge
+uses your components instead of inline Material3 calls.
+
+---
+
 ## Testing
 
 All tests run on JVM — no emulator required.

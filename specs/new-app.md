@@ -60,6 +60,46 @@ used a budgeting app before."]
 
 ---
 
+## Design system
+
+<!-- Describe your visual design. Forge will use Material3 defaults if this
+     section is left blank — fine for a prototype, not for a branded app.
+     Copy your values from Figma or your design tool. -->
+
+### Colors
+
+<!-- List your semantic color tokens. Use hex values. -->
+
+- Primary: [e.g., #6750A4]
+- On-primary: [e.g., #FFFFFF]
+- Secondary: [e.g., #625B71]
+- Background: [e.g., #FFFBFE]
+- Surface: [e.g., #FFFBFE]
+- Error: [e.g., #B3261E]
+
+OR: **N/A — use Material3 defaults.**
+
+### Typography
+
+- Display: [e.g., "Inter 57sp, weight 400"]
+- Headline: [e.g., "Inter 32sp, weight 600"]
+- Body: [e.g., "Inter 16sp, weight 400"]
+- Label: [e.g., "Inter 11sp, weight 500"]
+
+OR: **N/A — use Material3 defaults.**
+
+### Component style notes
+
+<!-- Describe how key components should look if they differ from Material3 defaults. -->
+
+- Buttons: [e.g., "Fully rounded (50% radius), 48dp height, no elevation"]
+- Cards: [e.g., "12dp corner radius, 1dp outline stroke, no shadow"]
+- Top bar: [e.g., "No shadow, surface color background"]
+
+OR: **N/A — use Material3 defaults.**
+
+---
+
 ## Screens
 
 <!-- List every screen in the initial version. For each screen, describe

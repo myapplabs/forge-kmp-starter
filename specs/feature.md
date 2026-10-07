@@ -31,6 +31,19 @@ forge feature --spec specs/my-feature.md --project .
 
 ---
 
+## Design
+
+<!-- Does this feature introduce new UI components or deviate from the existing
+     design system? Describe any specific styles here.
+     N/A if Forge should follow the existing theme and component library. -->
+
+- [e.g., "The confirmation dialog uses a destructive red primary button — use Error color from the theme"]
+- [e.g., "The empty state illustration is a 120dp icon, centered, using the outline color"]
+
+OR: **N/A — follow the existing design system.**
+
+---
+
 ## Screens and UI
 
 <!-- Describe what the user sees. One section per new or modified screen.
