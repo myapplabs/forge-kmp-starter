@@ -35,6 +35,35 @@ Forge handles the rename and the feature in a single run.
 
 ---
 
+## Swapping libraries
+
+You can replace any library in the stack — DI framework, networking, persistence,
+or anything else — by telling Forge what you want. No manual find-and-replace.
+
+```
+Replace Hilt with Koin for dependency injection across all modules.
+Update all DI wiring, remove Hilt annotations, and add Koin modules.
+```
+
+```
+Replace Ktor with Retrofit for networking in shared:data.
+```
+
+```
+Add SQLDelight for local persistence in shared:data, replacing the in-memory stubs.
+```
+
+**How it works:** Forge reads `.forge/CONVENTIONS.md` before every run — that
+file is the architecture guide it follows. When you ask Forge to swap a library,
+it will migrate the code *and* update `CONVENTIONS.md` so all future runs use
+the new convention. You can also edit `CONVENTIONS.md` yourself before running
+the spec if you want to be explicit about the new patterns.
+
+The libraries in this starter are defaults, not requirements. Forge adapts to
+your stack.
+
+---
+
 ## What's inside
 
 | Layer | Technology |
