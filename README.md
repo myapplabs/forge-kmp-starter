@@ -199,6 +199,14 @@ implementation** — read it before adding your first feature. It shows the
 complete vertical slice: domain model → use cases → repository → ViewModel →
 screen → Hilt wiring → tests.
 
+Reference files:
+- `shared/domain/src/commonMain/.../domain/model/CounterModel.kt`
+- `shared/domain/src/commonMain/.../domain/usecase/`
+- `shared/ui/src/commonMain/.../ui/counter/CounterContract.kt`
+- `shared/ui/src/commonMain/.../ui/counter/CounterViewModel.kt`
+- `shared/ui/src/commonMain/.../ui/counter/CounterScreen.kt`
+- `shared/ui/src/commonTest/.../ui/counter/CounterViewModelTest.kt`
+
 ```kotlin
 // Contract — one file per feature
 data class CounterUiState(val count: Int = 0, val isLoading: Boolean = false)
@@ -402,7 +410,7 @@ source_sets:
   android: androidMain
   ios: iosMain
 verification:
-  command: "./forge/verify.sh"
+  command: "./.forge/verify.sh"
   timeout_seconds: 300
 allowed_commands:
   - "./gradlew"
@@ -438,6 +446,26 @@ my-lib = { module = "com.example:my-lib", version.ref = "my-lib" }
 ```kotlin
 // build.gradle.kts
 implementation(libs.my.lib)
+```
+
+---
+
+## Cost
+
+Forge uses your Anthropic API key directly — there is no separate subscription.
+Rough ballpark using Claude Sonnet:
+
+| Run type | Typical cost |
+|----------|-------------|
+| Simple feature (1-2 screens, existing patterns) | $0.05 – $0.20 |
+| Medium feature (new data layer + UI) | $0.20 – $0.60 |
+| New app foundation (rename, modules, navigation, design system) | $0.50 – $1.50 |
+| Full app across multiple runs | $2.00 – $8.00 |
+
+Check before running:
+
+```bash
+forge estimate --spec specs/my-feature.md --project .
 ```
 
 ---
