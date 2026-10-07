@@ -1,0 +1,24 @@
+# Dependency policy — enforced by ANVIL on every Forge verification run.
+#
+# forbidden_dependencies: substrings matched case-insensitively against all
+# build.gradle.kts dependency declarations in the project.
+# Any match produces a DEP-001 finding and blocks acceptance.
+#
+# Add entries here to prevent Forge from pulling in libraries that conflict
+# with your chosen stack or that should never appear in this project.
+
+forbidden_dependencies:
+  # RxJava — this project uses Kotlin coroutines and Flow; do not mix paradigms
+  - "io.reactivex"
+  - "com.jakewharton.rxbinding"
+
+  # OkHttp direct usage — networking goes through Ktor; OkHttp is an engine detail only
+  # (Remove this entry if you switch from Ktor to Retrofit, which depends on OkHttp)
+  - "com.squareup.okhttp3:okhttp:"
+
+  # Retrofit — this project uses Ktor; the two should not coexist
+  # (Remove this entry if you intentionally swap to Retrofit via a spec)
+  - "com.squareup.retrofit2"
+
+  # LiveData — this project uses StateFlow; do not introduce LiveData
+  - "androidx.lifecycle:lifecycle-livedata"

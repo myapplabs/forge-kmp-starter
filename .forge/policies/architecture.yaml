@@ -1,3 +1,20 @@
+# Architecture policy — enforced by ANVIL on every Forge verification run.
+#
+# ANVIL checks:
+#   - modules.ui / modules.domain: paths used to detect cross-layer import violations
+#     (e.g. shared:ui importing from shared:data, shared:domain importing from shared:ui)
+#   - extra_platform_prefixes: import prefixes that must not appear in commonMain source files
+#     (in addition to the built-in android.*, androidx.*, platform.* checks)
+#
+# Any violation produces an ARCH-001 finding and blocks acceptance.
+
 modules:
   ui: shared/ui
   domain: shared/domain
+
+# Prevent accidental platform-specific leaks into commonMain.
+# Add your own app package prefixes here if you create platform-specific sub-packages.
+extra_platform_prefixes:
+  - "java.awt."        # AWT is desktop/JVM only — never valid in KMP commonMain
+  - "javax.swing."     # Swing is desktop/JVM only
+  - "sun."             # Internal JDK APIs — not available on Android or iOS
