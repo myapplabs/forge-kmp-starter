@@ -446,12 +446,23 @@ Forge run will be.
 ### `.forge/policies/` — deterministic rules ANVIL enforces
 
 Policies are rules that ANVIL checks on every verification run — independently
-of any AI judgment. The starter ships with an architecture policy enforcing
-module boundaries. Add your own for project-specific invariants:
+of any AI judgment. The starter ships with two policy files:
 
-- No calls to a deprecated internal API
+**`architecture.yaml`** — module boundary enforcement (hard gates):
+- `ARCH-001`: No `android.*` / `androidx.*` imports in `commonMain` Kotlin files
+- `ARCH-002`: `shared/ui` must not import the data layer (`.data.`, `.repository.`, `.dao.`) directly
+- `ARCH-003`: `shared/domain` must not import any platform code
+
+**`dependency.yaml`** — forbidden library enforcement (hard gate):
+- `DEP-001`: Blocks RxJava, Retrofit, OkHttp direct usage, and LiveData — libraries that conflict with the starter's chosen stack (Coroutines/Flow, Ktor, StateFlow)
+
+ANVIL also runs built-in security checks on every run regardless of policy files:
+hardcoded secrets, known-vulnerable CVEs, PII in logs, cleartext HTTP, and
+`verify.sh` tamper detection.
+
+Add your own policies for project-specific invariants — for example:
 - All network calls must go through a specific interface
-- Certain packages must never import from certain other packages
+- Certain internal packages must never import from each other
 
 ---
 
