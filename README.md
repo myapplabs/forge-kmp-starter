@@ -302,9 +302,12 @@ figma:
   file_url: "https://www.figma.com/file/XXXXXXXXXXXXXXXXXXXXXXXX/MyApp"
 ```
 
-2. Export your Figma API token and set it in the environment:
+2. Set your Figma API token in the same shell where you run Forge — alongside
+   your `ANTHROPIC_API_KEY`. Add both to your shell profile (`~/.zshrc` or
+   `~/.bashrc`) so they are available in every session:
 
 ```bash
+export ANTHROPIC_API_KEY=sk-ant-...
 export FIGMA_API_KEY=figd_...
 ```
 
