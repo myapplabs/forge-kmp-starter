@@ -1,0 +1,3 @@
+modules:
+  ui: shared/ui
+  domain: shared/domain

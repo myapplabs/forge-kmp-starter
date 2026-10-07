@@ -1,0 +1,37 @@
+# Gradle
+.gradle/
+build/
+*.gradle.kts.cache
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+
+# Android
+local.properties
+*.jks
+*.keystore
+google-services.json
+
+# iOS
+GoogleService-Info.plist
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# KMP
+/shared/build/
+/app/build/
+/buildSrc/build/
+
+# Kotlin
+*.class
+
+# Logs
+*.log

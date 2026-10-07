@@ -1,0 +1,19 @@
+name: ForgeStarter
+type: kmp
+architecture:
+  ui: compose-multiplatform
+  state: viewmodel-stateflow
+  di: hilt
+  networking: ktor
+  persistence: none
+source_sets:
+  common: commonMain
+  android: androidMain
+  ios: iosMain
+verification:
+  command: "./forge/verify.sh"
+  timeout_seconds: 300
+allowed_commands:
+  - "./gradlew"
+  - "git"
+autonomy_level: 1
