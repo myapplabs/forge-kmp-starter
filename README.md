@@ -122,51 +122,78 @@ For iOS, open `iosApp/iosApp.xcodeproj` in Xcode and run on a simulator.
 
 ---
 
-## Adding a new feature with Forge
+## Building with Forge
 
-This is the intended workflow. You describe the feature; Forge implements it.
+### Single feature
 
-Copy [`specs/feature.md`](specs/feature.md) as your starting point. A good spec
-includes a summary, acceptance criteria, a UI description, and explicit out-of-scope
-exclusions — the clearer the spec, the less back-and-forth in the repair loop.
+Copy [`specs/feature.md`](specs/feature.md), fill it in, and run:
 
 ```bash
-# Set your API key
 export ANTHROPIC_API_KEY=sk-ant-...
 
-# Check if your spec is clear enough before running
+# Optional: estimate API cost before committing
+forge estimate --spec specs/my-feature.md --project .
+
+# Check the spec is clear enough
 forge spec check --spec specs/my-feature.md --project .
 
-# Start the feature run
+# Run
 forge feature --spec specs/my-feature.md --project .
 ```
 
-Forge will:
-1. **Research** — read the codebase, map the module structure, find existing patterns
-2. **Plan** — produce a step-by-step implementation plan following `CONVENTIONS.md`
-3. **Pause for your approval** — you review the plan before any code is written
-4. **Execute** — implement in an isolated git worktree
-5. **Verify** — run `./gradlew test` and ANVIL deterministic checks
-6. **Review** — independent AI review pass
-7. **Pause for your approval** — you merge or reject
+Forge will research, plan, pause for your approval, implement, verify, review,
+and pause again before merging.
 
 ```bash
-# After the plan is ready, inspect and approve
+# Approve the plan (before any code is written)
 forge inspect plan --project .
 forge approve --project .
 
-# After execution, inspect and approve
+# Approve the final result
 forge inspect verify --project .
 forge inspect review --project .
 forge approve --project .
+```
+
+### Building a full app across multiple runs
+
+A complete app is too large for a single Forge run. Break it into focused runs —
+each one builds on the last, stays reviewable, and keeps the repair loop short.
+
+A typical sequence for a new app:
+
+| Run | Spec | What it does |
+|-----|------|-------------|
+| Run 0 | `specs/my-app.md` | Rename, module structure, navigation skeleton, design system, error model |
+| Run 1 | `specs/run1-auth.md` | Authentication screens and logic |
+| Run 2 | `specs/run2-home.md` | Home screen and data layer |
+| Run 3 | `specs/run3-settings.md` | Settings, persistence |
+| ... | ... | One feature or layer per run |
+
+Keep each run scoped to one concern. Include a **"What NOT to do"** section in
+every spec to prevent Forge from reaching into the next run's scope.
+
+### When a run needs attention
+
+```bash
+# See where the run is
+forge status --project .
+
+# If verification failed and auto-repair is exhausted
+forge repair --project .
+
+# If the run is stuck and you want to start over
+forge abandon --project .
 ```
 
 ---
 
 ## The UiState / UiEvent / UiEffect pattern
 
-Every feature follows this contract. The `counter` feature is the reference
-implementation.
+Every feature follows this contract. **The `counter` feature is the reference
+implementation** — read it before adding your first feature. It shows the
+complete vertical slice: domain model → use cases → repository → ViewModel →
+screen → Hilt wiring → tests.
 
 ```kotlin
 // Contract — one file per feature
