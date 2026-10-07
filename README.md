@@ -9,6 +9,32 @@ verifies the code automatically.
 
 ---
 
+## Start here: make it yours
+
+The starter ships with the package `com.forge.starter` and the app name
+`ForgeStarter`. **You do not need to rename these manually.** Just tell Forge
+in your first spec:
+
+```
+Rename the app to "MyApp" and update the package name to "com.mycompany.myapp"
+throughout all modules, build files, and manifest.
+```
+
+Forge will research every file that references the old package, rename them
+consistently, and verify the build still passes. Same for the app name, root
+project name in `settings.gradle.kts`, and iOS bundle identifier.
+
+You can also combine it with your first real feature:
+
+```
+Rename the app to "Budgetly" (package: com.budgetly.app) and add a home screen
+that shows a monthly spending summary with a breakdown by category.
+```
+
+Forge handles the rename and the feature in a single run.
+
+---
+
 ## What's inside
 
 | Layer | Technology |
