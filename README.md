@@ -479,13 +479,21 @@ rules:
 
 ANVIL also runs built-in checks on every run regardless of policy files:
 
-| Rule | What it checks |
-|------|---------------|
-| `KMP-001` | Use case classes expose only `operator fun invoke()` |
-| `KMP-002` | No `MutableStateFlow` exposed publicly (must expose `StateFlow`) |
-| `KMP-003` | No `GlobalScope` — use structured concurrency |
-| `SEC-001–006` | Secrets, CVEs, PII in logs, cleartext HTTP, insecure hashes, `verify.sh` integrity |
-| `TEST-001` | No test files deleted during the run |
+| Rule | Category | What it checks |
+|------|----------|---------------|
+| `ARCH-004` | Architecture | No `Context`/`Activity`/`Fragment` as ViewModel field (memory leak) |
+| `KMP-001` | KMP | Use case classes expose only `operator fun invoke()` |
+| `KMP-002` | KMP | No `MutableStateFlow` exposed publicly (must expose `StateFlow`) |
+| `KMP-003` | KMP | No `GlobalScope` — use structured concurrency |
+| `QUAL-001` | Quality | No `TODO()` stubs in production code *(hard gate)* |
+| `QUAL-002` | Quality | No empty catch blocks |
+| `QUAL-003` | Quality | No `println`/`print` in production code |
+| `QUAL-004` | Quality | No `runBlocking` in production code |
+| `QUAL-005` | Quality | No excessive `!!` usage (>3 per file) |
+| `QUAL-006` | Quality | No `@Suppress` annotations |
+| `SEC-001–006` | Security | Secrets, CVEs, PII in logs, cleartext HTTP, insecure hashes, `verify.sh` integrity |
+| `TEST-001` | Integrity | No test files deleted during the run |
+| `TEST-002` | Integrity | No `@Ignore` added to tests *(hard gate)* |
 
 ---
 
