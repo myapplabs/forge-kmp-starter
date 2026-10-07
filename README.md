@@ -173,6 +173,10 @@ A typical sequence for a new app:
 Keep each run scoped to one concern. Include a **"What NOT to do"** section in
 every spec to prevent Forge from reaching into the next run's scope.
 
+Name your spec files to match the run sequence — `specs/run0-foundation.md`,
+`specs/run1-auth.md`, etc. Commit them alongside your code so the full history
+of what was built and why stays in the repository.
+
 ### When a run needs attention
 
 ```bash
@@ -438,10 +442,44 @@ implementation(libs.my.lib)
 
 ---
 
+## Troubleshooting
+
+**`ANTHROPIC_API_KEY` not set**
+```
+Error: provider initialization failed
+```
+Run `export ANTHROPIC_API_KEY=sk-ant-...` before any `forge` command.
+
+**Gradle sync fails after cloning**
+Open the project in Android Studio and let it sync. Run `./gradlew assembleDebug` to confirm the build is clean before running Forge.
+
+**iOS build fails — framework not found**
+Run `./gradlew :shared:ui:assembleReleaseXCFramework` to generate the KMP framework, then clean and rebuild in Xcode.
+
+**Forge can't find the verification script**
+Check `.forge/project.yaml` — `verification.command` must be `./.forge/verify.sh` (note the leading dot).
+
+**Forge run stuck at `NEEDS_INTERVENTION`**
+```bash
+forge status --project .          # see what failed
+forge inspect verify --project .  # read the ANVIL and test output
+forge repair --project .          # attempt another repair pass
+forge abandon --project .         # give up and start fresh
+```
+
+**Plan looks wrong — Forge misunderstood the spec**
+Reject the plan with a reason: `forge reject --project .`
+Then revise your spec (add more detail to the screens section or tighten the "What NOT to do" list) and re-run.
+
+---
+
 ## Documentation
 
 | File | Contents |
 |------|----------|
-| `.forge/CONVENTIONS.md` | Full architecture guide — the single source of truth for how code is structured |
+| `.forge/CONVENTIONS.md` | Architecture guide — the single source of truth Forge follows |
 | `.forge/project.yaml` | Forge project configuration |
 | `.forge/policies/architecture.yaml` | ANVIL architecture enforcement rules |
+| `specs/new-app.md` | Spec template for starting a brand new app |
+| `specs/feature.md` | Spec template for adding a feature |
+| `specs/examples/` | Completed example specs showing what good looks like |

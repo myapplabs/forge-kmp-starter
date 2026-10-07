@@ -11,7 +11,7 @@ source_sets:
   android: androidMain
   ios: iosMain
 verification:
-  command: "./forge/verify.sh"
+  command: "./.forge/verify.sh"
   timeout_seconds: 300
 allowed_commands:
   - "./gradlew"
