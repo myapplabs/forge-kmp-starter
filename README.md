@@ -380,30 +380,65 @@ missing a pattern, Forge will invent one. Keep it current.
 ### `.forge/skills/` — domain knowledge injected into prompts
 
 Skills are structured guides that give Forge deep knowledge about a specific
-technology or pattern. The starter enables the built-in `kmp` and `compose`
-skills by default.
+technology or pattern.
+
+**Important:** if you do not set `skills:` in `project.yaml`, all built-in
+skills are active automatically. You only need to list skills explicitly when
+adding custom ones or restricting which built-ins are active.
+
+Built-in skills (always available):
+
+| Skill | What it covers |
+|-------|---------------|
+| `kmp-core` | KMP architecture, expect/actual, shared module layout |
+| `android-jetpack` | Jetpack Compose, ViewModel, Navigation |
+| `ios-swiftui` | SwiftUI host, KMP framework integration |
+| `kmp-testing` | commonTest, Turbine, Fake stubs |
+| `kotlin-style` | Kotlin idioms and style conventions |
 
 ```bash
-forge skill list          # see what's available
-forge skill show kmp      # read what Forge knows about KMP
+forge skill list               # see all available skills
+forge skill show kmp-core      # read what Forge knows about KMP
 ```
 
-You can add your own skills for domain-specific knowledge Forge should always
-have — your API conventions, your design system rules, your backend contract:
+#### Adding a custom skill
 
-```bash
-# Create a custom skill
-forge skill validate .forge/skills/my-api.yaml
-```
-
-Reference them in `.forge/project.yaml`:
+Create a YAML file in `.forge/skills/`. The starter includes a template at
+`.forge/skills/api-conventions.yaml` — fill it in with your backend contract:
 
 ```yaml
-skills:
-  - kmp
-  - compose
-  - my-api     # your custom skill
+name: "api-conventions"
+version: "1.0.0"
+display_name: "API Conventions"
+description: "Backend API patterns and error handling for this project"
+phases: [research, plan, execute, review, repair]
+content: |
+  ## API Conventions
+  - Base URL: https://api.myapp.com/v1
+  - Auth: Bearer token in Authorization header
+  - Errors: sealed class ApiError — never throw raw exceptions
+  ...
 ```
+
+Then validate and reference it:
+
+```bash
+forge skill validate .forge/skills/api-conventions.yaml
+```
+
+```yaml
+# .forge/project.yaml
+skills:
+  - kmp-core
+  - android-jetpack
+  - kmp-testing
+  - api-conventions    # your custom skill
+```
+
+Good candidates for custom skills: your backend API contract, your design
+system component inventory, your team's naming conventions, third-party SDK
+patterns. The more accurately skills reflect your project, the better every
+Forge run will be.
 
 ### `.forge/policies/` — deterministic rules ANVIL enforces
 

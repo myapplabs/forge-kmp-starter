@@ -1,0 +1,52 @@
+name: "api-conventions"
+version: "1.0.0"
+display_name: "API Conventions"
+description: "Backend API patterns, error handling, and data layer conventions for this project"
+phases: [research, plan, execute, review, repair]
+content: |
+  ## API Conventions
+
+  This skill is a template — fill it in with your actual backend contract.
+  The more accurate it is, the better Forge's generated code will be.
+
+  ### Base URL and authentication
+
+  # Example:
+  # - Base URL: https://api.myapp.com/v1
+  # - Auth: Bearer token in Authorization header
+  # - Token stored in: DataStore under key "auth_token"
+
+  ### Endpoint conventions
+
+  # Document your API's shape here. Example:
+  #
+  # GET  /users/{id}          → UserDto
+  # POST /users               → UserDto (body: CreateUserRequest)
+  # GET  /feed?page=&limit=   → PagedResponse<FeedItemDto>
+  #
+  # Pagination: cursor-based, field: "nextCursor" (null = last page)
+
+  ### Error handling
+
+  # Describe how your backend signals errors. Example:
+  #
+  # HTTP 4xx/5xx → error body: { "code": "USER_NOT_FOUND", "message": "..." }
+  # Map to sealed class ApiError in shared:data:
+  #   data class NotFound(val message: String) : ApiError()
+  #   data class Unauthorized(val message: String) : ApiError()
+  #   data class ServerError(val message: String) : ApiError()
+  #
+  # Never throw raw exceptions from repositories — return Result<T, ApiError>.
+
+  ### DTO conventions
+
+  # - All DTOs are data classes in shared/data/src/commonMain/.../data/remote/dto/
+  # - Use @Serializable from kotlinx.serialization
+  # - DTO names end in "Dto" (e.g. UserDto, FeedItemDto)
+  # - Map DTOs → domain models in the repository implementation, never in the ViewModel
+
+  ### Ktor client setup
+
+  # - Single HttpClient instance, created in shared:data, provided via DI
+  # - ContentNegotiation with Json { ignoreUnknownKeys = true }
+  # - Logging enabled in debug builds only
