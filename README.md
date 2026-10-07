@@ -11,27 +11,24 @@ verifies the code automatically.
 
 ## Start here: make it yours
 
-The starter ships with the package `com.forge.starter` and the app name
-`ForgeStarter`. **You do not need to rename these manually.** Just tell Forge
-in your first spec:
+Two spec templates are included in [`specs/`](specs/):
 
+| Template | Use when |
+|----------|----------|
+| [`specs/new-app.md`](specs/new-app.md) | Starting a brand new app — covers app identity, all initial screens, navigation, and acceptance criteria in one run |
+| [`specs/feature.md`](specs/feature.md) | Adding a feature to an existing app |
+
+**If this is a new app, start with `specs/new-app.md`.** It includes app name
+and package renaming alongside your initial screens — Forge handles everything
+in a single run. The starter ships with the package `com.forge.starter` and app
+name `ForgeStarter`; you do not need to rename anything manually.
+
+```bash
+# Copy, fill in, and run
+cp specs/new-app.md specs/my-app.md
+# edit specs/my-app.md ...
+forge feature --spec specs/my-app.md --project .
 ```
-Rename the app to "MyApp" and update the package name to "com.mycompany.myapp"
-throughout all modules, build files, and manifest.
-```
-
-Forge will research every file that references the old package, rename them
-consistently, and verify the build still passes. Same for the app name, root
-project name in `settings.gradle.kts`, and iOS bundle identifier.
-
-You can also combine it with your first real feature:
-
-```
-Rename the app to "Budgetly" (package: com.budgetly.app) and add a home screen
-that shows a monthly spending summary with a breakdown by category.
-```
-
-Forge handles the rename and the feature in a single run.
 
 ---
 
@@ -129,7 +126,7 @@ For iOS, open `iosApp/iosApp.xcodeproj` in Xcode and run on a simulator.
 
 This is the intended workflow. You describe the feature; Forge implements it.
 
-Use [`spec-template.md`](spec-template.md) as your starting point. A good spec
+Copy [`specs/feature.md`](specs/feature.md) as your starting point. A good spec
 includes a summary, acceptance criteria, a UI description, and explicit out-of-scope
 exclusions — the clearer the spec, the less back-and-forth in the repair loop.
 
@@ -138,10 +135,10 @@ exclusions — the clearer the spec, the less back-and-forth in the repair loop.
 export ANTHROPIC_API_KEY=sk-ant-...
 
 # Check if your spec is clear enough before running
-forge spec check --spec path/to/your-spec.md --project .
+forge spec check --spec specs/my-feature.md --project .
 
 # Start the feature run
-forge feature --spec path/to/your-spec.md --project .
+forge feature --spec specs/my-feature.md --project .
 ```
 
 Forge will:
