@@ -261,6 +261,70 @@ Use [Turbine](https://github.com/cashapp/turbine) for `Flow` assertions.
 
 ---
 
+## Customizing what Forge knows about your project
+
+Forge is only as good as the context you give it. Three files control what Forge
+knows before it writes a single line of code:
+
+### `.forge/CONVENTIONS.md` — your architecture guide
+
+This is the most important file. Forge reads it at the start of every run and
+follows it exactly. The starter ships with KMP/Compose/Hilt conventions — but
+as your project evolves, this file must evolve with it.
+
+**Update it whenever you:**
+- Establish a new pattern (e.g., how you handle errors, how you structure API calls)
+- Make an architectural decision that future features should follow
+- Swap a library (Forge will update it automatically when you ask it to migrate)
+
+If `CONVENTIONS.md` is out of date, Forge will follow the old pattern. If it is
+missing a pattern, Forge will invent one. Keep it current.
+
+### `.forge/skills/` — domain knowledge injected into prompts
+
+Skills are structured guides that give Forge deep knowledge about a specific
+technology or pattern. The starter enables the built-in `kmp` and `compose`
+skills by default.
+
+```bash
+forge skill list          # see what's available
+forge skill show kmp      # read what Forge knows about KMP
+```
+
+You can add your own skills for domain-specific knowledge Forge should always
+have — your API conventions, your design system rules, your backend contract:
+
+```bash
+# Create a custom skill
+forge skill validate .forge/skills/my-api.yaml
+```
+
+Reference them in `.forge/project.yaml`:
+
+```yaml
+skills:
+  - kmp
+  - compose
+  - my-api     # your custom skill
+```
+
+### `.forge/policies/` — deterministic rules ANVIL enforces
+
+Policies are rules that ANVIL checks on every verification run — independently
+of any AI judgment. The starter ships with an architecture policy enforcing
+module boundaries. Add your own for project-specific invariants:
+
+- No calls to a deprecated internal API
+- All network calls must go through a specific interface
+- Certain packages must never import from certain other packages
+
+---
+
+**The default setup is a starting point, not a constraint.** The more accurately
+these files reflect your project, the better every Forge run will be.
+
+---
+
 ## Forge configuration
 
 `.forge/project.yaml` — the configuration Forge reads before each run:
