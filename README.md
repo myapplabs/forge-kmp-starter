@@ -48,8 +48,12 @@ specs/             spec templates and examples
 `AppLabsCard`, `AppLabsTextField`, `AppLabsTopBar`, …), listed in
 [`.forge/DESIGN_COMPONENTS.md`](.forge/DESIGN_COMPONENTS.md). Screens use only these.
 
-When the app has its own Figma design file (`figma.file_url` in `.forge/project.yaml`), its color
-and text styles replace the token values; components keep working because they only use tokens.
+When the app has its own Figma design file (`figma.file_url` in `.forge/project.yaml`), run
+`forge design sync`: the file's color and text styles become `tokens/AppThemeTokens.kt` (generated —
+roles the file does not define keep the AppLabs defaults), which `AppLabsTheme` uses. Components
+keep working because they only use the theme and tokens. `forge design sync --reset` goes back to the
+AppLabs defaults. Name Figma styles after theme roles ("Primary", "On Primary", "Background",
+"Text", "Body Large", "Heading 1"…); sync lists anything it could not place.
 
 ## Build and test
 

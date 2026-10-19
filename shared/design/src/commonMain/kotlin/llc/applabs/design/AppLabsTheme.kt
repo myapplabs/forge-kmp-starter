@@ -5,10 +5,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
-import llc.applabs.design.tokens.AppLabsDarkColorScheme
-import llc.applabs.design.tokens.AppLabsLightColorScheme
+import llc.applabs.design.tokens.AppDarkColorScheme
+import llc.applabs.design.tokens.AppLightColorScheme
 import llc.applabs.design.tokens.AppLabsShapes
-import llc.applabs.design.tokens.AppLabsTypography
+import llc.applabs.design.tokens.AppTypography
 
 // ---------------------------------------------------------------------------
 // Theme entry point
@@ -32,11 +32,11 @@ fun AppLabsTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = if (useDarkTheme) AppLabsDarkColorScheme else AppLabsLightColorScheme
+    val colorScheme = if (useDarkTheme) AppDarkColorScheme else AppLightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppLabsTypography,
+        typography = AppTypography,
         shapes = AppLabsShapes,
         content = content,
     )

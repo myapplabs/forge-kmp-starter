@@ -36,8 +36,9 @@ shared/ui          screens, ViewModels, navigation, App() — shared by Android 
 
 - `AppLabsTheme`, tokens (`AppLabsColors`, `AppLabsTypography`, `AppLabsSpacing`,
   `AppLabsShapes`) and components (`AppLabsPrimaryButton`, `AppLabsCard`, `AppLabsTextField`, …).
-- The AppLabs design is the **default**. When the app has a Figma design file, its styles replace
-  the token values; components keep working because they only use tokens.
+- The AppLabs design is the **default**. When the app has a Figma design file, `forge design sync`
+  writes its styles to `tokens/AppThemeTokens.kt` (generated — never edit it by hand), which
+  `AppLabsTheme` uses; components keep working because they only use the theme and tokens.
 - Inventory and usage: `.forge/DESIGN_COMPONENTS.md` — consult it before writing UI.
 
 ### `:shared:ui` — screens
