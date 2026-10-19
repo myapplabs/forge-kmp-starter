@@ -19,6 +19,7 @@ on:
       - ".forge/failure_memory.yaml"
       - ".forge/policies/proposed/**"
   workflow_dispatch:
+  pull_request:   # TEMPORARY — proves the new iOS project on this PR; removed before merge
 
 permissions:
   contents: read
