@@ -12,13 +12,13 @@ forbidden_dependencies:
   - "io.reactivex"
   - "com.jakewharton.rxbinding"
 
-  # OkHttp direct usage — networking goes through Ktor; OkHttp is an engine detail only
-  # (Remove this entry if you switch from Ktor to Retrofit, which depends on OkHttp)
+  # Networking: none by default. When a spec adds it, use Ktor (multiplatform); OkHttp may appear
+  # only as Ktor's Android engine, and Retrofit (Android-only) should not be added.
   - "com.squareup.okhttp3:okhttp:"
-
-  # Retrofit — this project uses Ktor; the two should not coexist
-  # (Remove this entry if you intentionally swap to Retrofit via a spec)
   - "com.squareup.retrofit2"
+
+  # Android-only DI — this project uses manual DI that works on iOS too (CONVENTIONS.md §2)
+  - "com.google.dagger:hilt"
 
   # LiveData — this project uses StateFlow; do not introduce LiveData
   - "androidx.lifecycle:lifecycle-livedata"

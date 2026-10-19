@@ -1,0 +1,4 @@
+# How `forge new` turns this starter into a new app. It replaces these placeholders everywhere
+# (Kotlin, Gradle, Swift, Xcode project, plists, docs) and renames the package directories.
+app_name: ForgeStarter
+package: com.forge.starter

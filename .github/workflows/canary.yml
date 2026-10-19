@@ -1,0 +1,35 @@
+# Early warning for the next Linux runner image. CI is pinned (ci.yml); this
+# runs the same verification weekly on `ubuntu-latest`, so a breaking image
+# change shows up here — as a failed run and a GitHub email — not as a red
+# build in the middle of real work. It never blocks pushes or pull requests.
+# When it has passed for a few weeks on a new image, move the pin in ci.yml
+# (and note it in the README).
+name: Runner canary
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"   # Mondays 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-latest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-read-only: true
+      - name: Image under test
+        run: |
+          . /etc/os-release && echo "Runner OS: $PRETTY_NAME"
+          echo "Image: ${ImageOS:-?} ${ImageVersion:-?}"
+      - name: Verify (build + tests)
+        run: bash .forge/verify.sh

@@ -247,7 +247,7 @@ No sensitive data written to logs. No analytics.
 
 ## Technical notes
 
-- Replace Hilt with Koin — this app has no Android-specific DI needs
+- Add Ktor for the budget-sync API (the starter has no networking library)
 - Use SQLDelight for all persistence (transactions, categories) — replace the in-memory stubs
 - Use DataStore for preferences only (currency, theme)
 - All coroutine dispatchers injected via constructor for testability
