@@ -1,19 +1,63 @@
 name: ForgeStarter
 type: kmp
+
 architecture:
   ui: compose-multiplatform
   state: viewmodel-stateflow
-  di: hilt
-  networking: ktor
+  di: manual            # AppContainer (shared/data) → AppDependencies (shared/domain)
+  networking: none      # add one when a spec needs the network
   persistence: none
+
 source_sets:
   common: commonMain
   android: androidMain
   ios: iosMain
+
+reference_features:
+  - shared/ui/src/commonMain/kotlin/com/forge/starter/ui/counter
+
+# Per-phase models. Unset phases use FORGE's defaults. Each phase can run on another provider
+# (providers: below) — FORGE Desktop → the project's Settings tab, which also compares models.
+# models:
+#   review: gemini-4-argon
+
+# Per-run cost limit in USD, checked after every model turn: a phase stops cleanly at the limit.
+max_cost_usd: 20.00
+
 verification:
-  command: "./.forge/verify.sh"
+  command: ./.forge/verify.sh
   timeout_seconds: 300
+
 allowed_commands:
-  - "./gradlew"
-  - "git"
-autonomy_level: 1
+  - ./gradlew
+
+context_exclusions:
+  - "*.png"
+  - "*.jpg"
+  - "*.xcassets"
+
+# Launch check after verify.sh + ANVIL pass: builds, installs, launches and screenshots the app.
+# Android on any machine with the SDK and an emulator; iOS only on macOS.
+# smoke:
+#   android:
+#     package: com.forge.starter
+#     avd: Medium_Phone_API_36.0
+#   ios:
+#     bundle_id: com.forge.starter
+#     project: iosApp/iosApp.xcodeproj
+#     target: iosApp
+
+# Design file whose color and text styles FORGE reads (and, with `forge design sync`, turns into
+# :shared:design's tokens). Without one, the AppLabs default design is used.
+# figma:
+#   file_url: https://www.figma.com/design/<key>/<name>
+
+# Org knowledge base this app follows (forge ember org use)
+# ember_org: applabs
+
+# After final approval FORGE lands the run and waits for CI (docs/ci-integration.md in FORGE).
+# Needs a GitHub repository with these workflows. direct: push to master (the iOS workflow runs on
+# pushes to master); pr: open a pull request.
+integration:
+  mode: "off"
+  base: master

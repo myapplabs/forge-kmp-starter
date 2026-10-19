@@ -326,6 +326,6 @@ OR
 <!-- Optional. Specific preferences or constraints Forge should know about.
      Leave blank to accept the defaults in CONVENTIONS.md and project.yaml. -->
 
-- [e.g., "Replace Hilt with Koin for dependency injection"]
+- [e.g., "Add Ktor for networking (the starter has none)"]
 - [e.g., "Use SQLDelight instead of the in-memory repository stubs"]
 - [e.g., "All coroutine dispatchers must be injectable for testing"]

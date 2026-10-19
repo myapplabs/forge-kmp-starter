@@ -11,11 +11,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import app.cash.turbine.test
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -100,15 +100,10 @@ class CounterViewModelTest {
         val viewModel = createViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
 
-        viewModel.uiEffect.test {
-            viewModel.onEvent(CounterUiEvent.Reset)
-            testDispatcher.scheduler.advanceUntilIdle()
+        viewModel.onEvent(CounterUiEvent.Reset)
+        testDispatcher.scheduler.advanceUntilIdle()
 
-            val effect = awaitItem()
-            assertEquals(CounterUiEffect.ShowMessage("Counter reset"), effect)
-
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertEquals(CounterUiEffect.ShowMessage("Counter reset"), viewModel.uiEffect.first())
     }
 
     @Test
@@ -125,23 +120,15 @@ class CounterViewModelTest {
     }
 
     @Test
-    fun `state flow emits updated count after increment`() = runTest {
+    fun `state flow holds the updated count after increment`() = runTest {
         val viewModel = createViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
+        assertEquals(0, viewModel.uiState.value.count)
 
-        viewModel.uiState.test {
-            // consume current state
-            val current = awaitItem()
-            assertEquals(0, current.count)
+        viewModel.onEvent(CounterUiEvent.Increment)
+        testDispatcher.scheduler.advanceUntilIdle()
 
-            viewModel.onEvent(CounterUiEvent.Increment)
-            testDispatcher.scheduler.advanceUntilIdle()
-
-            val updated = awaitItem()
-            assertEquals(1, updated.count)
-
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertEquals(1, viewModel.uiState.value.count)
     }
 }
 
