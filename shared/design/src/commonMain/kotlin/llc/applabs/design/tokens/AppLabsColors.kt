@@ -5,15 +5,16 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 // ---------------------------------------------------------------------------
-// Brand palette — Facebook-inspired blue
+// Brand palette — Facebook-inspired blue, adjusted so text meets WCAG AA (4.5:1) — checked by FORGE's
+// render tier (RENDER-003) on every verification
 // ---------------------------------------------------------------------------
 
 // Primary blues
 val Blue10 = Color(0xFF001945)
 val Blue20 = Color(0xFF002F73)
 val Blue30 = Color(0xFF0E5FC0)
-val Blue40 = Color(0xFF1877F2)  // Facebook primary blue
-val Blue50 = Color(0xFF2D88FF)  // Lighter for dark themes
+val Blue40 = Color(0xFF0D68DF)  // primary blue — WCAG AA with white text and as text on Neutral90 (was #1877F2, 4.2:1)
+val Blue50 = Color(0xFF358CFF)  // lighter, for dark themes — AA as text on Surface10/20 (was #2D88FF)
 val Blue60 = Color(0xFF5BA4FF)
 val Blue70 = Color(0xFF8DC2FF)
 val Blue80 = Color(0xFFB8D8FF)
@@ -41,9 +42,10 @@ val Surface20 = Color(0xFF242526)  // Facebook dark surface
 val Surface30 = Color(0xFF3A3B3C)  // Facebook dark surface variant
 
 // Semantic
-val ErrorRed   = Color(0xFFFA383E)  // Facebook error red
+val ErrorRed   = Color(0xFFDB050C)  // error red — AA as text and under white text (was #FA383E, 3.3:1)
 val ErrorLight = Color(0xFFFFEDED)
-val SuccessGreen = Color(0xFF42B72A)  // Facebook green (sign-up)
+val SuccessGreen = Color(0xFF30851F)  // success green — AA under white text (was #42B72A, 2.6:1)
+val SuccessGreenBright = Color(0xFF42B72A)  // dark themes, under black text (8.0:1)
 val WarningAmber = Color(0xFFF7B928)
 
 // ---------------------------------------------------------------------------
@@ -102,7 +104,7 @@ val AppLabsDarkColorScheme = darkColorScheme(
     secondaryContainer = Blue30,
     onSecondaryContainer = Blue80,
 
-    tertiary          = SuccessGreen,
+    tertiary          = SuccessGreenBright,
     onTertiary        = Neutral0,
 
     error             = Color(0xFFFFB4AB),

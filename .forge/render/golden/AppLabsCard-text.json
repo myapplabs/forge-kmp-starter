@@ -1,0 +1,10 @@
+{
+ "schema": 1,
+ "screen": "AppLabsCard",
+ "state": "text",
+ "kind": "component",
+ "outline": [
+  "\"Card title\"",
+  "\"Supporting text inside a card.\""
+ ]
+}

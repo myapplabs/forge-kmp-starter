@@ -1,0 +1,18 @@
+{
+ "schema": 1,
+ "screen": "AppLabsButton",
+ "state": "all",
+ "kind": "component",
+ "outline": [
+  "Button [clickable]",
+  "  \"Primary\"",
+  "Button [clickable, disabled]",
+  "  \"Primary disabled\"",
+  "Button [clickable]",
+  "  \"Secondary\"",
+  "Button [clickable]",
+  "  \"Delete\"",
+  "Button [clickable]",
+  "  \"Text button\""
+ ]
+}
