@@ -15,6 +15,9 @@ kotlin {
             isStatic = true
         }
     }
+    // Test-only JVM target for FORGE's render tier (docs: forge/docs/render-tier.md) — never shipped.
+    jvm("desktop")
+
 
     androidLibrary {
         namespace = "com.forge.starter.domain"

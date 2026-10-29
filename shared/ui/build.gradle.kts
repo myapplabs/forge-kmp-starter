@@ -17,6 +17,9 @@ kotlin {
             isStatic = true
         }
     }
+    // Test-only JVM target for FORGE's render tier (docs: forge/docs/render-tier.md) — never shipped.
+    jvm("desktop")
+
 
     androidLibrary {
         namespace = "com.forge.starter.ui"
@@ -66,6 +69,12 @@ kotlin {
         // common UI code depends on domain interfaces (AppDependencies) only.
         iosMain.dependencies {
             implementation(projects.shared.data)
+        }
+        // FORGE render tier: screens rendered headlessly (PNG + semantics tree) — see ForgeRender.kt
+        getByName("desktopTest").dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.compose.uiTest)
+            implementation(compose.desktop.currentOs)
         }
     }
 }
