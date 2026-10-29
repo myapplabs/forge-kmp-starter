@@ -2,7 +2,7 @@
 
 **Module:** `:shared:design`
 **Package:** `llc.applabs.design`
-**Theme:** Facebook-inspired blue (`#1877F2` primary)
+**Theme:** Facebook-inspired blue (`#0D68DF` primary; the palette meets WCAG AA text contrast)
 
 Forge must consult this file before writing any UI code. Use only the
 components listed here instead of raw Material 3 components. If a component
@@ -61,10 +61,10 @@ ShapePill        // RoundedCornerShape(50)
 ```kotlin
 import llc.applabs.design.tokens.*
 
-Blue40       // #1877F2 — Facebook primary blue
-Blue50       // #2D88FF — lighter blue for dark mode
-SuccessGreen // #42B72A
-ErrorRed     // #FA383E
+Blue40       // #0D68DF — primary blue (AA with white text and as text)
+Blue50       // #358CFF — lighter blue for dark mode
+SuccessGreen // #30851F (SuccessGreenBright #42B72A: dark-mode tertiary, under black text)
+ErrorRed     // #DB050C
 Neutral10    // #1C1E21 — dark text
 Neutral30    // #65676B — secondary text
 Neutral90    // #F0F2F5 — light background

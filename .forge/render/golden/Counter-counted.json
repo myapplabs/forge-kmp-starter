@@ -1,0 +1,16 @@
+{
+ "schema": 1,
+ "screen": "Counter",
+ "state": "counted",
+ "kind": "screen",
+ "outline": [
+  "\"42\"",
+  "Button [clickable]",
+  "  \"−\"",
+  "Button [clickable]",
+  "  \"+\"",
+  "Button [clickable]",
+  "  \"Reset\"",
+  "\"Counter\""
+ ]
+}

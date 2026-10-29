@@ -1,0 +1,12 @@
+{
+ "schema": 1,
+ "screen": "AppLabsErrorState",
+ "state": "retry",
+ "kind": "component",
+ "outline": [
+  "\"Something went wrong\"",
+  "\"Check your connection.\"",
+  "Button [clickable]",
+  "  \"Try Again\""
+ ]
+}

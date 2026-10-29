@@ -1,0 +1,17 @@
+{
+ "schema": 1,
+ "screen": "Counter",
+ "state": "error",
+ "kind": "screen",
+ "outline": [
+  "\"3\"",
+  "Button [clickable]",
+  "  \"−\"",
+  "Button [clickable]",
+  "  \"+\"",
+  "Button [clickable]",
+  "  \"Reset\"",
+  "\"Could not save the count.\"",
+  "\"Counter\""
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "schema": 1,
+ "screen": "AppLabsEmptyState",
+ "state": "action",
+ "kind": "component",
+ "outline": [
+  "\"Nothing here yet\"",
+  "\"Items you add show up here.\"",
+  "Button [clickable]",
+  "  \"Add one\""
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "schema": 1,
+ "screen": "AppLabsTopBar",
+ "state": "title",
+ "kind": "component",
+ "outline": [
+  "\"Settings\""
+ ]
+}

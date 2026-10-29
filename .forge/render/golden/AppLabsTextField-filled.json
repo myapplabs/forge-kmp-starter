@@ -1,0 +1,15 @@
+{
+ "schema": 1,
+ "screen": "AppLabsTextField",
+ "state": "filled",
+ "kind": "component",
+ "outline": [
+  "node [clickable]",
+  "  \"Name\"",
+  "node [clickable]",
+  "  \"Email\"",
+  "node [clickable]",
+  "  \"Email\"",
+  "\"Enter a full email address\""
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "schema": 1,
+ "screen": "AppLabsBadge",
+ "state": "styles",
+ "kind": "component",
+ "outline": [
+  "\"Primary\"",
+  "\"Success\"",
+  "\"Neutral\""
+ ]
+}

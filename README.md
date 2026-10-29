@@ -69,6 +69,26 @@ open iosApp/iosApp.xcodeproj   # macOS: run the iosApp target
 Unit tests live in `commonTest` and also run on the JVM (`withHostTest {}`), so they run on Linux;
 `verify.sh` fails if a module has tests but none ran.
 
+### Screen renders
+
+`shared/ui`, `shared/design` and `shared/domain` have a **test-only** desktop target (`jvm("desktop")`, never
+shipped). On it, `shared/ui/src/desktopTest/…/render/AppRenderTest.kt` renders a **catalog** with no emulator:
+- every screen's content composable with fixed sample states;
+- the design components;
+- each one in light and dark, at font scale 1.0 and 2.0.
+
+The output is PNGs plus semantics trees in `shared/ui/build/forge-render/`, and `verify.sh` runs it with
+the other tests. FORGE's render tier then checks the renders on every verification:
+- invisible elements;
+- WCAG AA text contrast;
+- 48 dp touch targets;
+- large-font breakage;
+- structure against the goldens in `.forge/render/golden/`;
+- whether the catalog covers every screen.
+
+The AppLabs palette passes all of these. When you add a screen, add a `screen("Name") { state("…") { … } }`
+entry.
+
 ## Dependencies
 
 All versions are in `gradle/libs.versions.toml`. Every module has a `gradle.lockfile` (dependency
