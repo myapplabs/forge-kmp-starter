@@ -82,3 +82,8 @@ kotlin {
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
 }
+
+// FORGE render tier: the renders are part of desktopTest's output, so a build-cache hit restores them too
+tasks.matching { it.name == "desktopTest" }.configureEach {
+    outputs.dir(layout.buildDirectory.dir("forge-render")).withPropertyName("forgeRenders")
+}
