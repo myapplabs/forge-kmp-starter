@@ -3,7 +3,7 @@ package llc.applabs.design.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -29,6 +29,9 @@ import llc.applabs.design.tokens.ShapeButton
  * Always use one of these instead of Material [Button] directly.
  * This ensures consistent shape, spacing, and disabled states across
  * all screens.
+ *
+ * Height is a minimum (48 dp, the touch target), never fixed: at large font the label needs more room,
+ * and a fixed height cuts it off (FORGE RENDER-005).
  */
 
 // ---------------------------------------------------------------------------
@@ -46,7 +49,7 @@ fun AppLabsPrimaryButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(48.dp),
+        modifier = modifier.heightIn(min = 48.dp),
         enabled = enabled && !isLoading,
         shape = ShapeButton,
         contentPadding = PaddingValues(horizontal = AppLabsSpacing.lg, vertical = AppLabsSpacing.md_sm),
@@ -103,7 +106,7 @@ fun AppLabsSecondaryButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier.height(48.dp),
+        modifier = modifier.heightIn(min = 48.dp),
         enabled = enabled,
         shape = ShapeButton,
         contentPadding = PaddingValues(horizontal = AppLabsSpacing.lg, vertical = AppLabsSpacing.md_sm),
@@ -134,7 +137,7 @@ fun AppLabsDestructiveButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(48.dp),
+        modifier = modifier.heightIn(min = 48.dp),
         enabled = enabled && !isLoading,
         shape = ShapeButton,
         colors = ButtonDefaults.buttonColors(
