@@ -13,14 +13,22 @@ import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsNode
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.runDesktopComposeUiTest
 import androidx.compose.ui.unit.Density
 import llc.applabs.design.AppLabsTheme
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import java.io.File
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Proxy
 import javax.imageio.ImageIO
+import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * FORGE render tier harness (forge docs/render-tier.md, P0 spike).
@@ -49,6 +57,44 @@ class RenderCatalog {
 
 fun renderCatalog(block: RenderCatalog.() -> Unit): RenderCatalog = RenderCatalog().apply(block)
 
+/**
+ * A stand-in for an app interface nothing in the app's tests implements (ForgeRenderLocals.kt): every call returns
+ * its type's empty value — false, 0, "", empty collections, an empty Flow — and an app interface another inert
+ * stand-in. What has no empty value is null, so a screen that needs it still fails as RENDER-001.
+ */
+inline fun <reified T : Any> inert(): T = Inert.of(T::class.java)
+
+object Inert {
+    @Suppress("UNCHECKED_CAST")
+    fun <T> of(type: Class<T>): T = Proxy.newProxyInstance(type.classLoader, arrayOf(type)) { proxy, m, args ->
+        when {
+            m.name == "equals" && m.parameterCount == 1 -> proxy === args?.get(0)
+            m.name == "hashCode" && m.parameterCount == 0 -> System.identityHashCode(proxy)
+            m.name == "toString" && m.parameterCount == 0 -> "inert ${type.simpleName}"
+            m.isDefault -> InvocationHandler.invokeDefault(proxy, m, *(args ?: emptyArray()))
+            else -> empty(m.returnType)
+        }
+    } as T
+
+    private fun empty(t: Class<*>): Any? = when (t) {
+        Void.TYPE, Unit::class.java -> Unit
+        java.lang.Boolean.TYPE, java.lang.Boolean::class.java -> false
+        Integer.TYPE, Integer::class.java -> 0
+        java.lang.Long.TYPE, java.lang.Long::class.java -> 0L
+        java.lang.Float.TYPE, java.lang.Float::class.java -> 0f
+        java.lang.Double.TYPE, java.lang.Double::class.java -> 0.0
+        java.lang.Short.TYPE, java.lang.Short::class.java -> 0.toShort()
+        java.lang.Byte.TYPE, java.lang.Byte::class.java -> 0.toByte()
+        Character.TYPE, Character::class.java -> '\u0000'
+        String::class.java, CharSequence::class.java -> ""
+        List::class.java, Collection::class.java, Iterable::class.java -> emptyList<Any>()
+        Set::class.java -> emptySet<Any>()
+        Map::class.java -> emptyMap<Any, Any>()
+        Flow::class.java -> emptyFlow<Any>()
+        else -> if (t.isInterface && !t.name.matches(Regex("^(java|javax|kotlin|kotlinx|androidx)\\..*"))) of(t) else null
+    }
+}
+
 object ForgeRender {
     const val WIDTH_DP = 412
     const val HEIGHT_DP = 915
@@ -65,6 +111,31 @@ object ForgeRender {
     /** Renders every entry × variant; returns the index rows (one per render, with "ok" or the error). */
     @OptIn(ExperimentalTestApi::class)
     fun renderAll(catalog: RenderCatalog): List<Map<String, Any?>> {
+        val mainSet = ensureMain()
+        try {
+            return renderEach(catalog)
+        } finally {
+            if (mainSet) testDispatchers("resetMain", Dispatchers::class.java)?.invoke(null, Dispatchers)
+        }
+    }
+
+    /**
+     * ViewModels launch on `Dispatchers.Main` (`viewModelScope`), which a desktop test classpath often lacks.
+     * When it does, and kotlinx-coroutines-test is there, Main becomes `Unconfined` for the renders (as an app's
+     * own UI tests do with `Dispatchers.setMain`) — true when it was set here, to be reset afterwards.
+     */
+    private fun ensureMain(): Boolean {
+        if (runCatching { Dispatchers.Main.isDispatchNeeded(EmptyCoroutineContext) }.isSuccess) return false
+        val setMain = testDispatchers("setMain", Dispatchers::class.java, CoroutineDispatcher::class.java) ?: return false
+        return runCatching { setMain.invoke(null, Dispatchers, Dispatchers.Unconfined) }.isSuccess
+    }
+
+    private fun testDispatchers(name: String, vararg types: Class<*>) = runCatching {
+        Class.forName("kotlinx.coroutines.test.TestDispatchers").getMethod(name, *types)
+    }.getOrNull()
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun renderEach(catalog: RenderCatalog): List<Map<String, Any?>> {
         outDir.mkdirs()
         val rows = mutableListOf<Map<String, Any?>>()
         for (entry in catalog.entries) for (v in variants) {
@@ -80,19 +151,21 @@ object ForgeRender {
                 ) {
                     setContent {
                         CompositionLocalProvider(LocalDensity provides Density(DENSITY, v.fontScale)) {
-                            AppLabsTheme(useDarkTheme = v.dark) {
-                                // The screen's own Scaffold paints the background; a content composable
-                                // rendered alone gets the theme's, as it would inside the app.
-                                Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                                    entry.content()
+                            // What the app provides at its root (ForgeRenderLocals.kt), so screens reading it render.
+                            RenderLocals {
+                                AppLabsTheme(useDarkTheme = v.dark) {
+                                    // The screen's own Scaffold paints the background; a content composable
+                                    // rendered alone gets the theme's, as it would inside the app.
+                                    Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                                        entry.content()
+                                    }
                                 }
                             }
                         }
                     }
-                    waitForIdle()
-                    val root = onRoot(useUnmergedTree = true).fetchSemanticsNode()
+                    val settled = settle { tree(onRoot(useUnmergedTree = true).fetchSemanticsNode()) }
                     ImageIO.write(onRoot().captureToImage().toAwtImage(), "png", File(outDir, "$name.png"))
-                    File(outDir, "$name.json").writeText(tree(root))
+                    File(outDir, "$name.json").writeText(settled)
                 }
                 row["status"] = "ok"
                 row["png"] = "$name.png"
@@ -108,6 +181,28 @@ object ForgeRender {
             "{\"schema\":1,\"renders\":[\n" + rows.joinToString(",\n") { json(it) } + "\n]}\n",
         )
         return rows
+    }
+
+    const val SETTLE_STEP_MS = 40L
+    const val SETTLE_MAX_STEPS = 50
+
+    /**
+     * Waits until the screen stops changing and returns its last tree. A screen backed by a ViewModel gets
+     * its state from another thread (often `Dispatchers.Default`), which `waitForIdle` does not wait for, so
+     * the tree must read the same twice in a row, [SETTLE_STEP_MS] apart (at most [SETTLE_MAX_STEPS] steps).
+     */
+    @OptIn(ExperimentalTestApi::class)
+    private fun ComposeUiTest.settle(read: () -> String): String {
+        waitForIdle()
+        var last = read()
+        repeat(SETTLE_MAX_STEPS) {
+            Thread.sleep(SETTLE_STEP_MS)
+            waitForIdle()
+            val now = read()
+            if (now == last) return now
+            last = now
+        }
+        return last
     }
 
     private fun tree(root: SemanticsNode): String = "{\"schema\":1,\"root\":${node(root)}}\n"
