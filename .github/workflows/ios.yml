@@ -18,6 +18,9 @@ on:
       - ".forge/backlog/**"
       - ".forge/failure_memory.yaml"
       - ".forge/policies/proposed/**"
+      - ".forge/qa/flows/**"
+      - ".forge/render/golden/**"
+      - ".forge/project.yaml"
   workflow_dispatch:
 
 permissions:
