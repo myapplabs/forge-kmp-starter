@@ -16,8 +16,11 @@ on:
       - ".forge/backlog/**"
       - ".forge/failure_memory.yaml"
       - ".forge/policies/proposed/**"
+      - ".forge/qa/flows/**"
+      - ".forge/render/golden/**"
+      - ".forge/project.yaml"
   pull_request:
-    paths-ignore: ["docs/**", "**/*.md", ".forge/ember/**", ".forge/backlog/**", ".forge/failure_memory.yaml", ".forge/policies/proposed/**"]   # same list as push
+    paths-ignore: ["docs/**", "**/*.md", ".forge/ember/**", ".forge/backlog/**", ".forge/failure_memory.yaml", ".forge/policies/proposed/**", ".forge/qa/flows/**", ".forge/render/golden/**", ".forge/project.yaml"]   # same list as push
   workflow_dispatch:
 
 permissions:
